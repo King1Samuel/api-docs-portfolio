@@ -1,0 +1,119 @@
+openapi: "3.1.1"
+
+
+
+info:
+  title: "AppSmith Instance Management API"
+  description: "This page provides details on APIs available for monitoring a self-hosted Appsmith instance. These APIs enable you to monitor system health, performance metrics, and configuration statuses. You can integrate them with third-party monitoring tools like Prometheus, Datadog, or Grafana to automate health checks, analyze trends, and receive alerts for potential issues."
+
+
+
+servers:
+- url: https://your-appsmith-installation.com
+
+
+
+paths:
+  /api/v1/health:
+    get:
+      summary: "Check the health of the Appsmith instance"
+      responses:
+        '200': # The HTTP status code
+          description: "Successful response"
+          content:
+            application/json: # The format of the data
+              schema:
+                $ref: '#/components/schemas/HealthResponse'   # This "points" to the definition below
+  api/v1/consolidated-api/view:
+    get: 
+      summary: "Check the application performance of the Appsmith instance"
+      responses: 
+        '200': # The HTTP status code
+          description: "Successful response"
+          content:
+            application/json: # The format of the data
+              schema:
+                $ref: '#/components/schemas/ConsolidatedViewResponse'
+        '401':
+          description: "Unauthorized: Authentication is required."
+        '500':
+          description: "Internal Server Error: The server may be down or misconfigured."
+        '503':
+          description: "Service Unavailable: The system is overloaded or restarting."
+        '504':
+          description: "Gateway Timeout: The server did not receive a timely response."
+
+
+
+
+components:
+  schemas:
+    HealthResponse: # This is the name I gave my blueprint
+      type: object
+      properties: 
+        responseMeta: 
+          $ref: '#/components/schemas/ResponseMeta'   # Nesting a component inside a component!
+        data: 
+          type: string
+          example: "All systems are up"
+          errorDisplay:
+            type: string 
+            example: ""
+    ResponseMeta: # A reusable blueprint for the metadata object
+    type: object
+    properties:
+      status:
+        type: integer 
+        example: 200
+      success:
+        type: boolean
+        example: true
+    ConsolidatedViewResponse:
+      type: object
+      properties:
+        responseMeta:
+          $ref: '#/components/schemas/ResponseMeta'
+        data:
+          type: object
+          properties:
+            userProfile:
+              $ref: '#/components/schemas/NestedProfile'
+            featureFlags:
+              $ref: '#/components/schemas/NestedFlags'
+            organizationConfig:
+              $ref: '#/components/schemas/NestedOrg'
+
+    NestedProfile:
+      type: object
+      properties:
+        responseMeta:
+          $ref: '#/components/schemas/ResponseMeta'
+        data:
+          type: object
+          properties:
+            email: { type: string, example: "anonymousUser" }
+            isSuperUser: { type: boolean, example: false }
+        errorDisplay: { type: string, example: "" }
+
+    NestedFlags:
+      type: object
+      properties:
+        responseMeta:
+          $ref: '#/components/schemas/ResponseMeta'
+        data:
+          type: object
+          properties:
+            license_sso_saml_enabled: { type: boolean, example: true }
+        errorDisplay: { type: string, example: "" }
+
+    NestedOrg:
+      type: object
+      properties:
+        responseMeta:
+          $ref: '#/components/schemas/ResponseMeta'
+        data:
+          type: object
+          properties:
+            instanceId: { type: string, example: "644b84..." }
+            instanceName: { type: string, example: "Release EE" }
+        errorDisplay: { type: string, example: "" }
