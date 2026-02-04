@@ -14,4 +14,3 @@ I created a standardized OpenAPI 3.1.1 specification for Appsmith's self-hosted 
 ## Tools Used
 * **OpenAPI 3.1.1**
 * **Swagger Editor** (Validation)
-* **Redocly** (Rendering)
