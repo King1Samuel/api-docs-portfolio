@@ -13,6 +13,12 @@ servers:
 
 
 
+
+security:
+  - AdminToken: [] # Points to the name you defined in securitySchemes
+
+
+
 paths:
   /api/v1/health:
     get:
@@ -117,3 +123,10 @@ components:
             instanceId: { type: string, example: "644b84..." }
             instanceName: { type: string, example: "Release EE" }
         errorDisplay: { type: string, example: "" }
+
+
+  securitySchemes:
+    AdminToken:          # This is an arbitrary name for the scheme
+      type: apiKey
+      in: header         # The key is sent in the HTTP header
+      name: X-Appsmith-Api-Key # The specific header name Appsmith looks for
